@@ -319,51 +319,59 @@ dissect_command_join_payload(proto_tree* tree, tvbuff_t* tvb)
 void
 proto_register_photon(void)
 {
+#define REG_INFO(field_id, name, abbrev, type, display, strings, bitmask, blurb) { &field_id, { name, abbrev, type, display, strings, bitmask, blurb, HFILL } }
+#define REG_INT(field_id, name, abbrev, type) REG_INFO(field_id, name, abbrev, type, BASE_DEC, NULL, 0x0, NULL)
+#define REG_HEXINT(field_id, name, abbrev, type) REG_INFO(field_id, name, abbrev, type, BASE_HEX, NULL, 0x0, NULL)
+
     static hf_register_info hf[] = {
 
-        { &hf_photon_peer_id, { "Peer ID", "photon.peer_id", FT_INT16, BASE_DEC, NULL, 0x0, NULL, HFILL } },
-        { &hf_photon_check_crc, { "Check CRC", "photon.check_crc", FT_BOOLEAN, 2, NULL, 0, NULL, HFILL } },
-        { &hf_photon_commands_in_packet, { "Commands", "photon.commands_in_packet", FT_UINT8, BASE_DEC, NULL, 0x0, NULL, HFILL } },
-        { &hf_photon_sent_time, { "Sent time", "photon.sent_time", FT_UINT32, BASE_DEC, NULL, 0x0, NULL, HFILL } },
-        { &hf_photon_challenge, { "Challenge", "photon.challenge", FT_INT32, BASE_DEC, NULL, 0x0, NULL, HFILL } },
+        REG_INT(hf_photon_peer_id, "Peer ID", "photon.peer_id", FT_INT16),
+        REG_INFO(hf_photon_check_crc, "Check CRC", "photon.check_crc", FT_BOOLEAN, 2, NULL, 0, NULL),
+        REG_INT(hf_photon_commands_in_packet, "Commands", "photon.commands_count", FT_UINT8),
+        REG_INT(hf_photon_sent_time, "Sent time", "photon.sent_time", FT_UINT32),
+        REG_INT(hf_photon_challenge, "Challenge", "photon.challenge", FT_INT32),
 
-        { &hf_photon_command_type, { "Type", "photon.command.type", FT_UINT8, BASE_DEC | BASE_SPECIAL_VALS, command_types, 0x0, NULL, HFILL } },
-        { &hf_photon_command_channel_id, { "Channel ID", "photon.command.channel_id", FT_UINT8, BASE_HEX, NULL, 0x0, NULL, HFILL } },
-        { &hf_photon_command_flags, { "Flags", "photon.command.flags", FT_UINT8, BASE_HEX, NULL, 0x0, NULL, HFILL } },
-        { &hf_photon_command_reserved_byte, { "Reserved Byte", "photon.command.reserved_byte", FT_UINT8, BASE_HEX, NULL, 0x0, NULL, HFILL } },
-        { &hf_photon_command_size, { "Size", "photon.command.size", FT_INT32, BASE_DEC, NULL, 0x0, NULL, HFILL } },
-        { &hf_photon_command_reliable_sequence_number, { "Reliable Sequence Number", "photon.command.sequence_number", FT_INT32, BASE_DEC, NULL, 0x0, NULL, HFILL } },
+        REG_INFO(hf_photon_command_type, "Type", "photon.command.type", FT_UINT8, BASE_DEC | BASE_SPECIAL_VALS, command_types, 0x0, NULL),
+        REG_HEXINT(hf_photon_command_channel_id, "Channel ID", "photon.command.channel_id", FT_UINT8),
+        REG_HEXINT(hf_photon_command_flags, "Flags", "photon.command.flags", FT_UINT8),
+        REG_HEXINT(hf_photon_command_reserved_byte, "Reserved Byte", "photon.command.reserved_byte", FT_UINT8),
+        REG_INT(hf_photon_command_size, "Size", "photon.command.size", FT_INT32),
+        REG_INT(hf_photon_command_reliable_sequence_number, "Reliable Sequence Number", "photon.command.sequence_number", FT_INT32),
 
         // Acknoledge
-        { &hf_photon_command_ack_squence_number, { "Ack Reliable Sequence Number", "photon.command.ack_sequence_number", FT_UINT32, BASE_DEC, NULL, 0x0, NULL, HFILL } },
-        { &hf_photon_command_ack_sent_time, { "Ack Sent Time", "photon.command.ack_sent_time", FT_UINT32, BASE_DEC, NULL, 0x0, NULL, HFILL } },
+        REG_INT(hf_photon_command_ack_squence_number, "ACK Reliable Sequence Number", "photon.command.ack_sequence_number", FT_UINT32),
+        REG_INT(hf_photon_command_ack_sent_time, "ACK Sent Time", "photon.command.ack_sent_time", FT_UINT32),
 
         // VerifyConnect
-        { &hf_photon_command_peer_id, { "Peer ID", "photon.command.peer_id", FT_INT16, BASE_DEC, NULL, 0x0, NULL, HFILL } },
+        REG_INT(hf_photon_command_peer_id, "Peer ID", "photon.command.peer_id", FT_INT16),
 
         // Disconnect
-        { &hf_photon_command_disconnect_cause, { "Disconnect Cause", "photon.command.disconnect_cause", FT_UINT8, BASE_NONE, disconnects, 0x0, NULL, HFILL } },
+        REG_INFO(hf_photon_command_disconnect_cause, "Disconnect Cause", "photon.command.disconnect_cause", FT_UINT8, BASE_NONE, disconnects, 0x0, NULL),
 
         // Unreliable
-        { &hf_photon_command_unreliable_sequence_number, { "Unreliable Sequence Number", "photon.command.unreliable_sequence_number", FT_UINT32, BASE_DEC, NULL, 0x0, NULL, HFILL } },
+        REG_INT(hf_photon_command_unreliable_sequence_number, "Unreliable Sequence Number", "photon.command.unreliable_sequence_number", FT_UINT32),
 
         // Fragmented
-        { &hf_photon_command_start_sequence_number, { "Start Sequence Number", "photon.command.start_sequence_number", FT_UINT32, BASE_DEC, NULL, 0x0, NULL, HFILL } },
-        { &hf_photon_command_fragment_count, { "Fragments Remaining", "photon.command.fragments_remaining", FT_UINT32, BASE_DEC, NULL, 0x0, NULL, HFILL } },
-        { &hf_photon_command_fragment_number, { "Fragments Number", "photon.command.fragment_number", FT_UINT32, BASE_DEC, NULL, 0x0, NULL, HFILL } },
-        { &hf_photon_command_total_length, { "Total Length", "photon.command.total_length", FT_UINT32, BASE_DEC, NULL, 0x0, NULL, HFILL } },
-        { &hf_photon_command_fragment_offset, { "Fragment Offset", "photon.command.fragmented_offset", FT_UINT32, BASE_DEC, NULL, 0x0, NULL, HFILL } },
+        REG_INT(hf_photon_command_start_sequence_number, "Start Sequence Number", "photon.command.start_sequence_number", FT_UINT32),
+        REG_INT(hf_photon_command_fragment_count, "Fragments Remaining", "photon.command.fragments_remaining", FT_UINT32),
+        REG_INT(hf_photon_command_fragment_number, "Fragments Number", "photon.command.fragment_number", FT_UINT32),
+        REG_INT(hf_photon_command_total_length, "Total Length", "photon.command.total_length", FT_UINT32),
+        REG_INT(hf_photon_command_fragment_offset, "Fragment Offset", "photon.command.fragmented_offset", FT_UINT32),
 
-        { &hf_photon_command_payload_valid_udp, { "Valid Operation", "photon.command.payload.valid_udp", FT_BOOLEAN, BASE_NONE, NULL, 0x0, NULL, HFILL } },
-        { &hf_photon_command_payload_encrypted, { "Encrypted", "photon.command.payload.encrypted", FT_BOOLEAN, 8, NULL, 128, NULL, HFILL } },
-        { &hf_photon_command_payload_type, { "Type", "photon.command.payload.type", FT_UINT8, BASE_DEC | BASE_SPECIAL_VALS, payload_types, 127, NULL, HFILL } },
+        REG_INFO(hf_photon_command_payload_valid_udp, "Valid Operation", "photon.command.payload.valid_udp", FT_BOOLEAN, BASE_NONE, NULL, 0x0, NULL),
+        REG_INFO(hf_photon_command_payload_encrypted, "Encrypted", "photon.command.payload.encrypted", FT_BOOLEAN, 8, NULL, 128, NULL),
+        REG_INFO(hf_photon_command_payload_type, "Type", "photon.command.payload.type", FT_UINT8, BASE_DEC | BASE_SPECIAL_VALS, payload_types, 127, NULL),
 
         // Payloads
 
         // Connect
-        { &hf_photon_command_mtu, { "Peer MTU", "photon.command.mtu", FT_INT16, BASE_DEC, NULL, 0x0, NULL, HFILL } },
-        { &hf_photon_command_channel_count, { "Channel Count", "photon.command.channel_count", FT_UINT8, BASE_DEC, NULL, 0x0, NULL, HFILL } },
+        REG_INT(hf_photon_command_mtu, "Peer MTU", "photon.command.mtu", FT_INT16),
+        REG_INT(hf_photon_command_channel_count, "Channel Count", "photon.command.channel_count", FT_UINT8)
     };
+
+#undef REG_INFO
+#undef REG_INT
+#undef REG_HEXINT
 
     static gint* ett[] = {
         &photon_tree,
