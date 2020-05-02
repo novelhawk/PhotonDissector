@@ -319,19 +319,19 @@ dissect_command_join_payload(proto_tree* tree, tvbuff_t* tvb)
 void
 proto_register_photon(void)
 {
-#define REG_INFO(field_id, name, abbrev, type, display, strings, bitmask, blurb) { &field_id, { name, abbrev, type, display, strings, bitmask, blurb, HFILL } }
-#define REG_INT(field_id, name, abbrev, type) REG_INFO(field_id, name, abbrev, type, BASE_DEC, NULL, 0x0, NULL)
-#define REG_HEXINT(field_id, name, abbrev, type) REG_INFO(field_id, name, abbrev, type, BASE_HEX, NULL, 0x0, NULL)
+#define REG_ALL(field_id, name, abbrev, type, display, strings, bitmask) { &field_id, { name, abbrev, type, display, strings, bitmask, NULL, HFILL } }
+#define REG_INT(field_id, name, abbrev, type) REG_ALL(field_id, name, abbrev, type, BASE_DEC, NULL, 0x0, NULL)
+#define REG_HEXINT(field_id, name, abbrev, type) REG_ALL(field_id, name, abbrev, type, BASE_HEX, NULL, 0x0, NULL)
 
     static hf_register_info hf[] = {
 
         REG_INT(hf_photon_peer_id, "Peer ID", "photon.peer_id", FT_INT16),
-        REG_INFO(hf_photon_check_crc, "Check CRC", "photon.check_crc", FT_BOOLEAN, 2, NULL, 0, NULL),
+        REG_ALL(hf_photon_check_crc, "Check CRC", "photon.check_crc", FT_BOOLEAN, 2, NULL, 0),
         REG_INT(hf_photon_commands_in_packet, "Commands", "photon.commands_count", FT_UINT8),
         REG_INT(hf_photon_sent_time, "Sent time", "photon.sent_time", FT_UINT32),
         REG_INT(hf_photon_challenge, "Challenge", "photon.challenge", FT_INT32),
 
-        REG_INFO(hf_photon_command_type, "Type", "photon.command.type", FT_UINT8, BASE_DEC | BASE_SPECIAL_VALS, command_types, 0x0, NULL),
+        REG_ALL(hf_photon_command_type, "Type", "photon.command.type", FT_UINT8, BASE_DEC | BASE_SPECIAL_VALS, command_types, 0x0),
         REG_HEXINT(hf_photon_command_channel_id, "Channel ID", "photon.command.channel_id", FT_UINT8),
         REG_HEXINT(hf_photon_command_flags, "Flags", "photon.command.flags", FT_UINT8),
         REG_HEXINT(hf_photon_command_reserved_byte, "Reserved Byte", "photon.command.reserved_byte", FT_UINT8),
@@ -346,7 +346,7 @@ proto_register_photon(void)
         REG_INT(hf_photon_command_peer_id, "Peer ID", "photon.command.peer_id", FT_INT16),
 
         // Disconnect
-        REG_INFO(hf_photon_command_disconnect_cause, "Disconnect Cause", "photon.command.disconnect_cause", FT_UINT8, BASE_NONE, disconnects, 0x0, NULL),
+        REG_ALL(hf_photon_command_disconnect_cause, "Disconnect Cause", "photon.command.disconnect_cause", FT_UINT8, BASE_NONE, disconnects, 0x0),
 
         // Unreliable
         REG_INT(hf_photon_command_unreliable_sequence_number, "Unreliable Sequence Number", "photon.command.unreliable_sequence_number", FT_UINT32),
@@ -358,9 +358,9 @@ proto_register_photon(void)
         REG_INT(hf_photon_command_total_length, "Total Length", "photon.command.total_length", FT_UINT32),
         REG_INT(hf_photon_command_fragment_offset, "Fragment Offset", "photon.command.fragmented_offset", FT_UINT32),
 
-        REG_INFO(hf_photon_command_payload_valid_udp, "Valid Operation", "photon.command.payload.valid_udp", FT_BOOLEAN, BASE_NONE, NULL, 0x0, NULL),
-        REG_INFO(hf_photon_command_payload_encrypted, "Encrypted", "photon.command.payload.encrypted", FT_BOOLEAN, 8, NULL, 128, NULL),
-        REG_INFO(hf_photon_command_payload_type, "Type", "photon.command.payload.type", FT_UINT8, BASE_DEC | BASE_SPECIAL_VALS, payload_types, 127, NULL),
+        REG_ALL(hf_photon_command_payload_valid_udp, "Valid Operation", "photon.command.payload.valid_udp", FT_BOOLEAN, BASE_NONE, NULL, 0x0),
+        REG_ALL(hf_photon_command_payload_encrypted, "Encrypted", "photon.command.payload.encrypted", FT_BOOLEAN, 8, NULL, 128),
+        REG_ALL(hf_photon_command_payload_type, "Type", "photon.command.payload.type", FT_UINT8, BASE_DEC | BASE_SPECIAL_VALS, payload_types, 127),
 
         // Payloads
 
