@@ -75,10 +75,6 @@ static int hf_photon_command_reliable_sequence_number = -1;
 static int hf_photon_command_ack_squence_number = -1;
 static int hf_photon_command_ack_sent_time = -1;
 
-// Connect
-static int hf_photon_command_mtu = -1;
-static int hf_photon_command_channel_count = -1;
-
 // VerifyConnect
 static int hf_photon_command_peer_id = -1;
 
@@ -99,6 +95,11 @@ static int hf_photon_command_fragment_offset = -1;
 // === Command Payload ===
 // =======================
 
+// CommandType == Connect
+static int hf_photon_command_mtu = -1;
+static int hf_photon_command_channel_count = -1;
+
+// Every payload (with a few exceptions)
 static int hf_photon_command_payload_valid_udp = -1;
 static int hf_photon_command_payload_encrypted = -1;
 static int hf_photon_command_payload_type = -1;
